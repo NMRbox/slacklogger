@@ -11,7 +11,7 @@ setuptools.setup(
     description="Python logging handler which post to slack",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://https://github.com/NMRbox/slacklogger",
     packages=setuptools.find_packages(exclude='test.cfg'),
     classifiers=[
         "Programming Language :: Python :: 3",

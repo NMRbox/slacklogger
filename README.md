@@ -6,7 +6,7 @@ Supports updated _slack.WebClient_ API released in 2019.
 See https:://api.slack.com to for information on setting up app and get an authorization token. 
 Only a "bot" token is required to use SlackHandler, however, the unittest is more comlete with a "user" token.
 
-##Limitations
+## Limitations
 How often messages can be sent is limited by slack. See https://api.slack.com/docs/rate-limits. By
 default, this handler only sends accumulated messages every 60 seconds. That can be adjusted by
 the optional _update_ argument to __SlackHandler__.
