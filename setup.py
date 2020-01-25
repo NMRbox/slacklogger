@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="slacklogger",
-    version="0.0.1",
+    version="1.0.0",
     author="Gerard Weatherby",
     author_email="gweatherby@uchc.edu",
     description="Python logging handler which post to slack",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://https://github.com/NMRbox/slacklogger",
+    url="https://github.com/NMRbox/slacklogger",
     packages=setuptools.find_packages(exclude='test.cfg'),
     classifiers=[
         "Programming Language :: Python :: 3",
