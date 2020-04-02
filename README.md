@@ -13,6 +13,8 @@ the optional _update_ argument to __SlackHandler__.
 
 ### Example
 ```
+from nmrbox_slack.slacklogger import SlackHandler
+
 token = 'your token here'
 channel = 'your channel name'
 handler = SlackHandler(token, channel)
