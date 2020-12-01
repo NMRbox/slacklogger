@@ -2,7 +2,7 @@ Slack logger
 ============
 
 This package provides a logging.Handler that will send message to a
-slack channel. Supports updated *slack.WebClient* API released in 2019.
+slack channel. Supports updated *slack.WebClient* API released in 2020.
 
 Authorization
 -------------

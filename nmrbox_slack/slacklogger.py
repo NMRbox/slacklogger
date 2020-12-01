@@ -26,10 +26,10 @@ class SlackHandler(logging.StreamHandler):
             self.client = slack.WebClient(token)
             self.buffer = io.StringIO()
             self.send_time = 0  # don't send unit past this time (epoch seconds)
-            response = self.client.channels_list()
+            response = self.client.conversations_list(types="public_channel,private_channel")
             if response['ok']:
                 channels = response['channels']
-                channel_search = [c for c in channels if c['name'] == channel_name]
+                channel_search = [c for c in channels if channel_name in (c['id'], c['name'])]
                 if channel_search:
                     self.channel = channel_search[0]
                     self.channel_id = self.channel['id']
