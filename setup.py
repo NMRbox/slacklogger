@@ -5,7 +5,7 @@ with open("README.rst", "r") as fh:
 
 setup(
     name="slack-webclient-logger",
-    version="1.0.4",
+    version="2.0",
     author="Gerard Weatherby",
     author_email="gweatherby@uchc.edu",
     description="Python logging handler which posts to slack",
