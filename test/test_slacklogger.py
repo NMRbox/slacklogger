@@ -2,10 +2,13 @@ import configparser
 import logging
 import os
 import time
+import traceback
 import unittest
 import warnings
+from collections import defaultdict
 
-from nmrbox_slack.slacklogger import SlackHandler
+from nmrbox_slack.slacklogger import SlackHandler, LazySlackHandler
+
 
 class SlackLogger(unittest.TestCase):
 
@@ -20,7 +23,7 @@ class SlackLogger(unittest.TestCase):
         self.user_token = token.startswith('xoxp')
         self.channel = config['slacktest']['channel']
         self.number_messages = config.getint('slacktest','number messages',fallback=5)
-        self.handler = SlackHandler(token,self.channel)
+        self.handlers = (SlackHandler(token,self.channel),LazySlackHandler(token,self.channel))
         if not self.user_token:
             if token.startswith('xoxb'):
                 warnings.warn("Bot token does not support read back of messages, check slack channel manually.")
@@ -28,28 +31,34 @@ class SlackLogger(unittest.TestCase):
                 warnings.warn('Unrecognized token type "{}". Check slack channel manually.'.format(token[:4]))
 
     def test_send(self):
-        self.sent_messages = []
+        self.handler_sent = {}
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        self.handler.setFormatter(formatter)
         tlogger = logging.getLogger("Test Logger")
         tlogger.propagate = False
-        tlogger.addHandler(self.handler)
         tlogger.setLevel(logging.WARN)
         tlogger.info("This should not appear")
         tlogger.setLevel(logging.INFO)
-        for i in range(0, self.number_messages):
-            msg = "message # {:d}".format(i)
-            tlogger.info(msg)
-            if self.user_token:
-                self.sent_messages.append(msg)
+        for h in self.handlers:
+            sent_messages = []
+            h.setFormatter(formatter)
+            tlogger.addHandler(h)
+            for i in range(0, self.number_messages):
+                msg = "message # {:d}".format(i)
+                tlogger.info(msg)
+                if self.user_token:
+                    sent_messages.append(msg)
+            self.handler_sent[type(h)] = sent_messages
 
     def tearDown(self) -> None:
-        self.handler.send_remaining()
-        if self.user_token:
-            response = self.handler.client.channels_history(channel=self.handler.channel_id,count=self.number_messages)
-            msgs = response['messages']
-            for msg in msgs:
-                msg_text = msg['text']
-                self.sent_messages = [m for m in self.sent_messages if not m in msg_text]
-            if self.sent_messages:
-                raise AssertionError("Messages {} not read back from test channel".format(','.join(self.sent_messages)))
+        for h in self.handlers:
+            h.send_remaining()
+            if self.user_token:
+                sent_messages = self.handler_sent[type(h)]
+                response = h.webclient.channels_history(channel=h.channel_id,count=self.number_messages)
+                msgs = response['messages']
+                for msg in msgs:
+                    msg_text = msg['text']
+                    sent_messages = [m for m in sent_messages if not m in msg_text]
+                if sent_messages:
+                    raise AssertionError("Messages {} not read back from test channel".format(','.join(sent_messages)))
+
