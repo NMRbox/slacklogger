@@ -1,7 +1,7 @@
 Slack logger
 ============
 
-This package provides a logging.Handler that will send message to a
+This package provides logging.Handler implementations that will send message to a
 slack channel. Supports updated *slack.WebClient* API released in 2020.
 
 Authorization
@@ -38,6 +38,16 @@ Example
     ...
     # at end of program
     handler.send_remaining()
+
+Variants
+~~~~~~~~
+Two versions are currently supported.
+
+- **SlackHandler** connects to slack upon creation and validates the token and channel name.
+- **LazySlackHandler** does not attempt to connect to slack until the first message is sent.
+
+SlackHandler is recommended if it is known messages are to be sent. LazySlackHandler is available
+to reduce overhead of processes which typically do not send messages.
 
 Funding acknowledgment
 ~~~~~~~~~~~~~~~~~~~~~~
