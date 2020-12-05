@@ -9,7 +9,7 @@ Authorization
 
 See https:://api.slack.com to for information on setting up app and get
 an authorization token. Only a "bot" token is required to use
-SlackHandler, however, the unittest is more comlete with a "user" token.
+SlackHandler, however, the unittest is more complete with a "user" token.
 
 Limitations
 -----------
@@ -18,6 +18,9 @@ How often messages can be sent is limited by slack. See
 https://api.slack.com/docs/rate-limits. By default, this handler only
 sends accumulated messages every 60 seconds. That can be adjusted by the
 optional *update* argument to **SlackHandler**.
+
+*send_remaining()* should be called prior to program exit to send any remaining 
+messages.
 
 Example
 ~~~~~~~
