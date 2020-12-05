@@ -21,9 +21,13 @@ class SlackLogger(unittest.TestCase):
             config.read_file(f)
         token = config['slacktest']['token']
         self.user_token = token.startswith('xoxp')
-        self.channel = config['slacktest']['channel']
+        channel = config['slacktest']['channel']
+        second_channel = config['slacktest']['second channel']
         self.number_messages = config.getint('slacktest','number messages',fallback=5)
-        self.handlers = (SlackHandler(token,self.channel),LazySlackHandler(token,self.channel))
+        first_handler = SlackHandler(token,channel)
+        self.handlers = (first_handler,
+                         first_handler.additional_channel_handler(second_channel),
+                         LazySlackHandler(token, channel))
         if not self.user_token:
             if token.startswith('xoxb'):
                 warnings.warn("Bot token does not support read back of messages, check slack channel manually.")

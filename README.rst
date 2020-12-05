@@ -52,6 +52,20 @@ Two versions are currently supported.
 SlackHandler is recommended if it is known messages are to be sent. LazySlackHandler is available
 to reduce overhead of processes which typically do not send messages.
 
+Additional channels
+~~~~~~~~~~~~~~~~~~~
+Sending to additional channels may be done more efficiently with the *SlackHandler.additional_channel_handler()*
+method.
+
+::
+
+    from nmrbox_slack.slacklogger import SlackHandler
+    token = 'your token here'
+    channel = 'your channel name'
+    handler = SlackHandler(token, channel)
+    second_handler = heandler.additional_channel_handler('second channel name')
+
+
 Funding acknowledgment
 ~~~~~~~~~~~~~~~~~~~~~~
 
