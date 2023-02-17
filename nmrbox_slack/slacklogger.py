@@ -1,12 +1,11 @@
-import collections
 import io
 import logging
+import time
 from abc import ABC, abstractmethod
+from typing import Mapping
 
 import slack
-import sys
-import time
-
+import slack.errors
 from slack import WebClient
 
 
@@ -187,3 +186,16 @@ class LazySlackHandler(AbstractSlackHandler):
 
     def _post_message(self, text: str, timeout: int):
         self.handler.client.chat_postMessage(channel=self.channel_id, text=text, timeout=timeout)
+
+def from_mapping(mapping:Mapping,*,lazy:bool,**kwargs)->AbstractSlackHandler:
+    """mapping: e.g. {'slack':
+        {'channel':<channelname>,'token file':<token file>
+        lazy: LazySlackeHandler if True, else SlackHandler'"""
+    channel = mapping['slack']['channel']
+    tf  = mapping['slack']['token file']
+    with open(tf) as f:
+        token = f.readline().strip('\n').strip()
+    if lazy:
+        return LazySlackHandler(token,channel,**kwargs)
+    return SlackHandler(token,channel,**kwargs)
+

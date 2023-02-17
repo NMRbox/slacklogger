@@ -1,0 +1,1 @@
+from slacklogger import SlackHandler,LazySlackHandler,from_mapping

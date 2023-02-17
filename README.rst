@@ -65,6 +65,19 @@ method.
     handler = SlackHandler(token, channel)
     second_handler = heandler.additional_channel_handler('second channel name')
 
+From mapping
+~~~~~~~~~~~~
+*from_mapping(mapping:Mapping,*,lazy:bool)* will return a SlackHandler or LazySlackHandler from
+a mapping:
+
+::
+
+    {'slack:
+        {
+        'channel':<channel name>,
+        'token file': <file with token in it>
+        }
+    }
 
 Funding acknowledgment
 ~~~~~~~~~~~~~~~~~~~~~~
